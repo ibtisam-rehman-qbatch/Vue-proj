@@ -4,6 +4,7 @@ import packageVariantClosed from "../assets/svgs/package-variant-closed.svg"
 import chevronDown from "../assets/svgs/chevron-down.svg"
 import searchSm from "../assets/svgs/search-sm.svg"
 import bell from "../assets/svgs/bell-01.svg"
+
 </script>
 
 <template>
@@ -20,7 +21,7 @@ import bell from "../assets/svgs/bell-01.svg"
             <img :src="chevronDown" class="border-r-[1px] border-[#B6BCD3] px-3"/>
           </button>
           <input
-            v-model="searchQuery"
+            
             @input="handleSearch"
             class=" w-96 h-10 focus:outline-none  focus:border-blue-300 text-sm"
             type="text"

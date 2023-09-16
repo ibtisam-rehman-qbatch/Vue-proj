@@ -1,22 +1,41 @@
 <script setup>
-import successStar from "../assets/svgs/success-star.svg"
-import unSuccessStar from "../assets/svgs/unsuccess-star.svg"
+
 import chevronDown from "../assets/svgs/chevron-down.svg"
 
+import CheckboxComponent from "./CheckboxComponent.vue";
+import RatingComponent from "./RatingComponent.vue"
+import { ref } from "vue";
+
+const showExport = ref(0);
+
+const props = defineProps({
+        data: Object,
+  });
+
+const handleExportClick = (e)=>{
+//    console.log(e.target.value)
+    if(e.target.checked) showExport.value++;
+    else showExport.value--;
+      
+    emit('export-button', showExport.value)
+}
+
+const emit = defineEmits(['export-button']);
 </script>
 <template>
-  <div class="w-[252px] h-[446px] bg-white m-3">
+  <div class="w-[252px] h-[446px] bg-white">
     <div class="flex flex-col space-y-4 p-4">
         <div id="cardPoster" class="w-[220px] h-[125px]">
             <div class="flex">
-                <input type="checkbox" class="form-checkbox accent-[#27C498] text-[#27C498] border-[#27C498] h-6 w-6 rounded-md focus:ring-[#27C498]">
+               
+                <CheckboxComponent @change="handleExportClick"/>
                 <img src="../assets/images/cardImg.png"/>
             </div>
         </div>
             <hr/>
         <div class="flex flex-col space-y-2">
           <p id="cardIntro" class="text-sm font-poppins">
-                  Amazon Essentials Men's Short Sleeve Crew neck T-Shirt
+                 {{ props.data.description }}
           </p>
 
             <div id="priceSection" class="flex flex-col space-y-0.5">
@@ -24,7 +43,7 @@ import chevronDown from "../assets/svgs/chevron-down.svg"
                         Price
                     </p>
                     <p class=" text-2xl">
-                        $20.00
+                         ${{ props.data.price}}
                     </p>
             </div>
 
@@ -34,13 +53,10 @@ import chevronDown from "../assets/svgs/chevron-down.svg"
                     Reviews
                 </p>
                 <div class="inline-flex items-center">
-                    <img :src="successStar"/>
-                    <img :src="successStar"/>
-                    <img :src="successStar"/>
-                    <img :src="successStar"/>
-                    <img :src="unSuccessStar"/>
+                    
+                    <RatingComponent :filledStars="props.data.rating"/>
                     <img :src="chevronDown" class="px-3"/>
-                    <p class="text-[#27C498]">25,280</p>
+                    <p class="text-[#27C498]">{{ props.data.reviewCount }}</p>
                 </div>
                 
             </div>
@@ -52,7 +68,7 @@ import chevronDown from "../assets/svgs/chevron-down.svg"
                 
                 <p>
                     <span class="bg-[#0FB600] text-white">
-                        #3
+                        #{{ props.data.topN }}
                     </span>
                     <span class="pl-1">
                         in Men's T-Shirts

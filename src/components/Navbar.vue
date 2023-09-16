@@ -1,19 +1,20 @@
 <script setup>
-    import viewdashboard from "../assets/svgs/view-dashboard.svg"
-    import viewList from "../assets/svgs/view-list.svg"
+    import viewdashboard from "../assets/svgs/view-dashboard.vue"
+    import viewList from "../assets/svgs/view-list.vue"
     import ProductListing from "../pages/ProductListing.vue";
 </script>
 
 <template>
   <div class="flex flex-row">
-    <div class="flex flex-col p-6 bg-white w-64 space-y-4 border" style="height: calc(100vh - 4rem)">
-        <button class="inline-flex items-center space-x-3">
-            <img :src="viewdashboard"/>
-            <p class="text-[#27C498]">Dashboard</p>
+    <div class="flex flex-col p-6 mx-2 bg-white w-64 space-y-4 " style="height: calc(100vh - 4rem)">
+        <button class="inline-flex items-center space-x-3 text-[#ADB4D2] hover:text-[#27C498]">
+         
+            <viewdashboard/>
+            <p >Dashboard</p>
         </button>
-        <button class="inline-flex items-center space-x-3">
-            <img :src="viewList"/>
-            <p class="text-[#ADB4D2]">Product Listings</p>
+        <button class="inline-flex items-center space-x-3 text-[#ADB4D2] hover:text-[#27C498]">
+            <viewList/>
+            <p >Product Listings</p>
         </button>
     </div>
 
