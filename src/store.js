@@ -10,6 +10,7 @@ export const useAuthStore = defineStore({
   id: "auth",
   state: () => ({
     accessToken: localStorage.getItem("token"),
+    allProducts: [],
     user: {},
     loading: false,
   }),
@@ -43,6 +44,18 @@ export const useAuthStore = defineStore({
       }
     },
 
+    async fetchProducts(queryParams) {
+      try {
+        this.loading = true;
+        const response = await axiosInstance.get(`/products?${queryParams}`);
+        if (isResponseSuccessful(response)) {
+          this.allProducts = response.data.allProducts;
+        }
+        this.loading = false;
+      } catch {
+        this.loading = false;
+      }
+    },
     logout(router) {
       this.accessToken = null;
       localStorage.clear();

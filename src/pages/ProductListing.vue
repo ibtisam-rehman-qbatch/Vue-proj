@@ -2,7 +2,8 @@
      import ProductCard from '../components/ProductCard.vue';
      import FilterSection from '../components/FilterSection.vue';
      import MoreFiltersCard from '../components/MoreFiltersCard.vue';
-      import { ref } from 'vue';
+      import { ref, watchEffect } from 'vue';
+      import { useAuthStore } from '../store';
 
       // import { useAuthStore } from '../store';
 
@@ -88,6 +89,12 @@
 
       const showMoreFilters = ref(false);
       const showExport = ref(0);
+      // const allProducts= ref([]);
+      
+      // watchEffect(() => {
+      //    useAuthStore.fetchProducts();
+      //   });
+      //   allProducts= useAuthStore.allProducts;
 
       const displayFilters = ()=>{
         showMoreFilters.value=true
