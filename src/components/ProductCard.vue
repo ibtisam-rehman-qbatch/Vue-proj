@@ -52,12 +52,12 @@ const emit = defineEmits(['export-button']);
                 <p class="text-[#979797]">
                     Reviews
                 </p>
-                <div class="inline-flex items-center">
+                <button class="inline-flex items-center">
                     
                     <RatingComponent :filledStars="props.data.rating"/>
                     <img :src="chevronDown" class="px-3"/>
                     <p class="text-[#27C498]">{{ props.data.reviewCount }}</p>
-                </div>
+                </button>
                 
             </div>
 

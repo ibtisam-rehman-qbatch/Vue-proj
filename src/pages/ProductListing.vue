@@ -4,6 +4,13 @@
      import MoreFiltersCard from '../components/MoreFiltersCard.vue';
       import { ref } from 'vue';
 
+      // import { useAuthStore } from '../store';
+
+      // const data = useAuthStore()
+      // console.log(data.accessToken)
+      // data.setAccessToken("ABBBCDD")
+      // console.log(data.accessToken)
+
      const allProducts = ref([
           {
             image: "../assets/images/cardImg.png",
