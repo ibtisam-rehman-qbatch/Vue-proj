@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { piniaInstance } from "./global/pinia";
 import axiosInstance from "./utils/axiosUtils";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 const isResponseSuccessful = (response) => {
   return response.status >= 200 && response.status < 300;
@@ -9,7 +11,7 @@ const isResponseSuccessful = (response) => {
 export const useAuthStore = defineStore({
   id: "auth",
   state: () => ({
-    accessToken: localStorage.getItem("token"),
+    accessToken: localStorage.getItem("accessToken"),
     allProducts: [],
     user: {},
     loading: false,
@@ -29,17 +31,19 @@ export const useAuthStore = defineStore({
 
         this.loading = true;
         const response = await axiosInstance.post("/user/login", data);
+
         if (isResponseSuccessful(response)) {
           this.accessToken = response.data.token;
-          localStorage.setItem("token", this.accessToken);
+          localStorage.setItem("accessToken", this.accessToken);
           router.push({ name: "Products" });
+          toast.success("Login Successfully!");
         } else {
-          window.alert("Invalid Credentials");
+          toast.error("Invalid Credentials");
         }
         this.loading = false;
       } catch (error) {
         this.loading = false;
-        alert("Invalid Credentials");
+
         console.log(error);
       }
     },
@@ -50,9 +54,12 @@ export const useAuthStore = defineStore({
         const response = await axiosInstance.get(`/products?${queryParams}`);
         if (isResponseSuccessful(response)) {
           this.allProducts = response.data.allProducts;
+        } else {
+          toast.error("Can't fetch products");
         }
         this.loading = false;
-      } catch {
+      } catch (error) {
+        console.log("Error during fecting products: ", error);
         this.loading = false;
       }
     },
@@ -61,11 +68,5 @@ export const useAuthStore = defineStore({
       localStorage.clear();
       router.push({ name: "Login" });
     },
-    // setAccessToken(token) {
-    //   this.accessToken = token;
-    // },
-    // clearAccessToken() {
-    //   this.accessToken = null;
-    // },
   },
 })(piniaInstance);

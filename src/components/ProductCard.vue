@@ -23,6 +23,7 @@ const handleExportClick = (e)=>{
 const emit = defineEmits(['export-button']);
 </script>
 <template>
+   
   <div class="w-[252px] h-[446px] bg-white">
     <div class="flex flex-col space-y-4 p-4">
         <div id="cardPoster" class="w-[220px] h-[125px]">
@@ -33,9 +34,10 @@ const emit = defineEmits(['export-button']);
             </div>
         </div>
             <hr/>
+            <!-- overflow-ellipsis overflow-hidden   -->
         <div class="flex flex-col space-y-2">
-          <p id="cardIntro" class="text-sm font-poppins">
-                 {{ props.data.description }}
+          <p id="cardIntro" class="w-[13.75rem] h-[2.5rem] text-sm font-poppins line-clamp-2 overflow-hidden text-overflow-ellipsis" :title="props.data.title">
+                 {{ props.data.title }}
           </p>
 
             <div id="priceSection" class="flex flex-col space-y-0.5">
@@ -54,9 +56,9 @@ const emit = defineEmits(['export-button']);
                 </p>
                 <button class="inline-flex items-center">
                     
-                    <RatingComponent :filledStars="props.data.rating"/>
+                    <RatingComponent :filledStars="props.data.reviews"/>
                     <img :src="chevronDown" class="px-3"/>
-                    <p class="text-[#27C498]">{{ props.data.reviewCount }}</p>
+                    <p class="text-[#27C498]">{{ props.data.reviews_count }}</p>
                 </button>
                 
             </div>
@@ -66,16 +68,17 @@ const emit = defineEmits(['export-button']);
                     BSR
                 </p>
                 
-                <p>
+                <p class="inline-flex items-center">
                     <span class="bg-[#0FB600] text-white">
-                        #{{ props.data.topN }}
+                        #{{ props.data.category_bsr }}
                     </span>
-                    <span class="pl-1">
-                        in Men's T-Shirts
-                    </span>
-                    <span class=" text-[#27C498]">
+                    <span class="px-1 truncate">
+                       in {{props.data.main_category_name}}
+                       <span class=" text-[#27C498]" v-if="props.data.category_bsr <=100">
                         (Top 100)
                     </span>
+                    </span>
+                    
                     
                 </p>
                 

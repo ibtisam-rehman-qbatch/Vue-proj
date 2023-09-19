@@ -8,7 +8,8 @@
     import LogoutConfirmation from "./LogoutConfirmation.vue";
     import { useAuthStore } from '../store';
 
-
+   
+    
     const showConfirmation = ref(false);
     const router = useRouter()
 
@@ -16,7 +17,7 @@
         useAuthStore.logout(router); 
         showConfirmation.value = false; 
       };
-  
+      
       const cancel = () => {
         showConfirmation.value = false; 
       };

@@ -18,7 +18,7 @@
           <div class="mb-4">
             <label for="password"  class="block text-sm font-medium text-gray-700">Password</label>
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               id="password"
               autocomplete="current-password"
               v-model="password"
@@ -26,6 +26,16 @@
               placeholder="Enter your password"
               required
             />
+            <div className="flex items-center justify-start space-x-2 p-3 text-sm font-medium text-gray-700">
+            <input
+              id="togglePassword"
+              type="checkbox"
+              :value="showPassword"
+              :onClick="togglePasswordVisibility"
+            />
+            <label htmlFor="togglePassword">Show Password</label>
+          </div>
+          
           </div>
           <div class="flex items-center justify-between">
             <button
@@ -46,6 +56,7 @@
   import { useRouter } from 'vue-router';
 
   const router = useRouter()
+  const showPassword = ref(false);
   
     const email = ref('');
     const password = ref('');
@@ -53,6 +64,10 @@
     const login = async () => {
        const isValid = await useAuthStore.login(email.value, password.value, router)
     };
+
+    const togglePasswordVisibility = ()=>{
+      showPassword.value = !showPassword.value;
+    }
   
     
 

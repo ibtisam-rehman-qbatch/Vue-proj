@@ -2,95 +2,27 @@
      import ProductCard from '../components/ProductCard.vue';
      import FilterSection from '../components/FilterSection.vue';
      import MoreFiltersCard from '../components/MoreFiltersCard.vue';
-      import { ref, watchEffect } from 'vue';
+      import { ref, watchEffect,onMounted } from 'vue';
       import { useAuthStore } from '../store';
+      import { useRoute } from 'vue-router';
 
-      // import { useAuthStore } from '../store';
-
-      // const data = useAuthStore()
-      // console.log(data.accessToken)
-      // data.setAccessToken("ABBBCDD")
-      // console.log(data.accessToken)
-
-     const allProducts = ref([
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,980',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 2,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          },
-          {
-            image: "../assets/images/cardImg.png",
-            description: "Amazon Essentials Men's Short Sleeve Crew neck T-Shirt",
-            price: '20.00',
-            rating: 4,
-            reviewCount: '25,280',
-            topN: 3,
-            isChecked: false
-          }
-        ])
 
       const showMoreFilters = ref(false);
       const showExport = ref(0);
-      // const allProducts= ref([]);
-      
+      const allProducts= ref([]);
+      const route = useRoute();
+
+      const queryParams = route.query;
+
+
+
+      watchEffect(async()=>{
+        console.log("inside watcheffect")
+      await useAuthStore.fetchProducts(queryParams);
+      allProducts.value = useAuthStore.allProducts;
+
+    })
+    
       // watchEffect(() => {
       //    useAuthStore.fetchProducts();
       //   });

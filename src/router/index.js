@@ -3,6 +3,8 @@ import ProductListing from "../pages/ProductListing.vue";
 import Login from "../pages/Login.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import { useAuthStore } from "../store";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 const routes = [
   {
@@ -30,7 +32,7 @@ router.beforeEach((to, from, next) => {
     next(from);
   } else if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!useAuthStore.accessToken) {
-      alert("Login to continue");
+      toast.error("Login to continue");
       next("/login");
     } else {
       next();
