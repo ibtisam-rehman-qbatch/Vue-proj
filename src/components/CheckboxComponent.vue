@@ -4,12 +4,14 @@
     isBorder: {
         type: Boolean,
         default: true 
-    }
+    },
+    defaultValue : Boolean
     });
+    const emit = defineEmits(["toggleCheck"])
 </script>
 <template lang="">
     <label class="flex h-[20px] cursor-pointer items-center">
-      <input type="checkbox" class="w-[0px] h-[0px]" />
+      <input type="checkbox" @click="emit('toggleCheck')" class="w-[0px] h-[0px]"  :checked="defaultValue" />
       <span
         :class="{
             'checkmark input-checked:bg-[#27C498] flex items-center justify-center h-full w-[20px] border rounded-md' : true,

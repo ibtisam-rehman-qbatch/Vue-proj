@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import { piniaInstance } from "./global/pinia";
 import VueLoaders from "vue-loaders";
+import "vue-loaders/dist/vue-loaders.css";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 

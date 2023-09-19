@@ -7,14 +7,34 @@ import bell from "../assets/svgs/bell-01.svg"
 import AllFilters from "./AllFilters.vue"
 import { ref } from "vue"
 import { vOnClickOutside } from '@vueuse/components'
+import { debounce } from "lodash";
+import { useRoute, useRouter } from "vue-router"
+import { useAuthStore } from "../store"
 
-
+const route = useRoute();
+const router = useRouter();
+const searchTerm = ref(route.query.search);
 const showModal = ref(false);
 const hideFilters = ()=>{
   console.log("inside hide")
   showModal.value=false;
 }
 
+
+const handleSearch = ()=>{
+  const value = searchTerm.value;
+  if(value){
+    router.push({ query: { search: value } , name: "Products" });
+    const query = new URLSearchParams({ search: value  }).toString();
+    useAuthStore.fetchProducts(query)
+
+  }else{
+    router.push({name: "Products"})
+    useAuthStore.fetchProducts();
+  }
+
+}
+const debouncedHandleSearch = debounce(handleSearch, 900);
 </script>
 
 <template>
@@ -39,13 +59,15 @@ const hideFilters = ()=>{
         </div>
           <input
             
-            @input="handleSearch"
+            @input="(e) => debouncedHandleSearch(e.target.value)"
+         
+            v-model="searchTerm"
             class=" w-96 h-10 focus:outline-none  focus:border-blue-300 text-sm"
             type="text"
             placeholder="Search Products, Keywords, or ASINs"
           />
-          <div class="bg-white p-1 rounded-r-full inline-flex items-center">
-            <button>
+          <div class="bg-white p-1 h-10 rounded-r-full inline-flex items-center">
+            <button @click="handleSearch">
 
               <img :src="searchSm" class="px-3"/>
             </button>

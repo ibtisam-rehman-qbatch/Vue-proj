@@ -3,7 +3,7 @@
     import viewList from "../assets/svgs/view-list.vue"
     import logoutIcon from "../assets/svgs/logout-icon.vue"
 
-    import { ref } from "vue";
+    import { ref, watchEffect } from "vue";
     import { useRouter } from 'vue-router';
     import LogoutConfirmation from "./LogoutConfirmation.vue";
     import { useAuthStore } from '../store';

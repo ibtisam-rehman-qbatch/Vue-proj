@@ -7,6 +7,8 @@ import Login from "./pages/Login.vue";
 import AllFilters from "./components/AllFilters.vue";
 
 import MainLayout from "./components/MainLayout.vue";
+
+
 import Loader from "./components/Loader.vue";
 </script>
 
@@ -14,6 +16,8 @@ import Loader from "./components/Loader.vue";
   <div >
     <Loader/>
     <MainLayout/>
+
+    <!-- <Loader/> -->
   </div>
 </template>
 
