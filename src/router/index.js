@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import ProductListing from "../pages/ProductListing.vue";
 import Login from "../pages/Login.vue";
 import Dashboard from "../pages/Dashboard.vue";
+import ProductDetails from "../pages/ProductDetails.vue";
+
 import { useAuthStore } from "../store";
 import { useToast } from "vue-toastification";
 const toast = useToast();
@@ -18,6 +20,13 @@ const routes = [
     name: "Products",
     component: ProductListing,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/products/:id",
+    name: "Product-details",
+    component: ProductDetails,
+    meta: { requiresAuth: true },
+    props: true,
   },
   { path: "/login", name: "Login", component: Login },
 ];

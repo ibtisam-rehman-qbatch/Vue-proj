@@ -5,38 +5,63 @@ import chevronDown from "../assets/svgs/chevron-down.svg"
 import CheckboxComponent from "./CheckboxComponent.vue";
 import RatingComponent from "./RatingComponent.vue"
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import detailProdPic from "../assets/images/prodDetailPic.png"
 
+const router = useRouter()
 const showExport = ref(0);
 
 const props = defineProps({
         data: Object,
+        isDetail: {
+            type: Boolean,
+            default: false 
+        },
   });
 
 const handleExportClick = (e)=>{
-//    console.log(e.target.value)
+
     if(e.target.checked) showExport.value++;
     else showExport.value--;
       
     emit('export-button', showExport.value)
 }
 
+const showDetailPage = ()=>{
+    router.push({ name: 'Product-details', params: { id: props.data.id } })
+}
+
 const emit = defineEmits(['export-button']);
 </script>
 <template>
    
-  <div class="w-[252px] h-[446px] bg-white">
-    <div class="flex flex-col space-y-4 p-4">
-        <div id="cardPoster" class="w-[220px] h-[125px]">
-            <div class="flex">
-               
-                <CheckboxComponent @change="handleExportClick"/>
-                <img src="../assets/images/cardImg.png"/>
+  <div :class="{
+    'w-[252px] h-[446px]': !isDetail ,
+    'w-[21.625rem] h-[30.25rem]': isDetail ,
+    'bg-white': true
+    }">
+    <div class="flex flex-col space-y-5 p-4">
+        <div id="cardPoster" :class="{
+            'w-[220px] h-[125px]': !isDetail,
+            'w-[18.625rem] h-[12.1875rem]': isDetail,
+            }">
+            <div :class="{
+                'flex': true,
+                'justify-center': isDetail
+            }">
+    
+                <CheckboxComponent @change="handleExportClick" v-if="!isDetail"/>
+                <img :src="detailProdPic" :class="isDetail ? 'w-[15.625rem] h-[12.1875rem] shrink-0' : 'w-[9.75rem] h-[7.812rem] shrink-0'"/>
             </div>
         </div>
             <hr/>
-            <!-- overflow-ellipsis overflow-hidden   -->
+           
         <div class="flex flex-col space-y-2">
-          <p id="cardIntro" class="w-[13.75rem] h-[2.5rem] text-sm font-poppins line-clamp-2 overflow-hidden text-overflow-ellipsis" :title="props.data.title">
+          <p id="cardIntro" :title="props.data.title" :class="{
+            ' font-poppins line-clamp-2 overflow-hidden text-overflow-ellipsis:':true,
+            'w-[13.75rem] h-[2.5rem] text-sm': !isDetail,
+            'w-[18.625rem] text-md': isDetail
+            }">
                  {{ props.data.title }}
           </p>
 
@@ -84,8 +109,8 @@ const emit = defineEmits(['export-button']);
                 
             </div>
 
-        <div id="detailsButton" class="pt-3">
-            <button class="text-[#27C498] border w-full text-md h-10 border-[#27C498] rounded-md hover:bg-[#27C498] hover:text-white">
+        <div id="detailsButton" class="pt-3" v-if="!isDetail">
+            <button @click="showDetailPage" class="text-[#27C498] border w-full text-md h-10 border-[#27C498] rounded-md hover:bg-[#27C498] hover:text-white">
                 View More Details
             </button>
         </div>

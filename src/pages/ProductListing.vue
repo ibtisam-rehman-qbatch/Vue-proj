@@ -2,25 +2,32 @@
      import ProductCard from '../components/ProductCard.vue';
      import FilterSection from '../components/FilterSection.vue';
      import MoreFiltersCard from '../components/MoreFiltersCard.vue';
-      import { ref, watchEffect,onMounted } from 'vue';
+      import { ref, watchEffect,onMounted, watch } from 'vue';
       import { useAuthStore } from '../store';
-      import { useRoute } from 'vue-router';
+      import { useRoute, useRouter } from 'vue-router';
       import Pagination from '../components/Pagination.vue';
 
 
       const showMoreFilters = ref(false);
       const showExport = ref(0);
+
       // const allProducts= ref([]);
       const route = useRoute();
+      const router = useRouter()
 
       const queryParams = route.query;
       const currentPage = ref(parseInt(queryParams["pageNo"]) || 1);
       const queryString = new URLSearchParams(queryParams).toString();
 
+     
       watchEffect( async ()=>{
        
       await useAuthStore.fetchProducts(queryString);
       // allProducts.value = useAuthStore.allProducts;
+      })
+
+      watch(route, (newVal, oldVal)=>{
+          currentPage.value = Number(newVal.query.pageNo) || 1
       })
      
 
@@ -40,6 +47,18 @@
     const updatePageNum = (page)=>{
       currentPage.value = page;
     }
+
+    // const handlePageChange = (page)=>{
+    //   router.push({ query: { ...route.query, pageNo: page } , name: "Products" });
+
+    //   const query = new URLSearchParams({ ...route.query, pageNo: page }).toString();
+    //   useAuthStore.fetchProducts(query)
+    //   currentPage.value = page;
+    //   console.log("curr page: ", currentPage.value)
+    // }
+
+
+
 
 
   </script>
@@ -64,7 +83,7 @@
       <MoreFiltersCard :hideFilters="hideFilters"/>
     </div>
 
-    <Pagination :currentPage="currentPage" :totalPages="20" :updatePageNum="updatePageNum"/>
+    <Pagination :currentPage="currentPage" :totalPages="useAuthStore.totalPages" :updatePageNum="updatePageNum" />
 
   </div>
     

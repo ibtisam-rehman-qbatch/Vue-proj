@@ -2,122 +2,81 @@ import { defineStore } from "pinia";
 import { piniaInstance } from "./global/pinia";
 import axiosInstance from "./utils/axiosUtils";
 import { useToast } from "vue-toastification";
+import { ref } from "vue";
 const toast = useToast();
 
 const isResponseSuccessful = (response) => {
   return response.status >= 200 && response.status < 300;
 };
 
-// const handleParams = async (params) => {
-//   console.log("Params are: ", params);
-//   const paramArray = params.split("&");
-//   const updatedParams = {
-//     weightRange: "",
-//     dimensions: "",
-//     priceRange: "",
-//     numberOfReviews: "",
-//   };
+export const useAuthStore = defineStore("Products", () => {
+  const accessToken = ref(localStorage.getItem("accessToken"));
+  const allProducts = ref([]);
+  const totalPages = ref(0);
+  const user = ref({});
+  const loading = ref(false);
 
-//   paramArray.forEach((param) => {
-//     const [key, value] = param.split("=");
+  const getAccessToken = () => {
+    return accessToken.value;
+  };
 
-//     switch (key) {
-//       case "MinWeight":
-//       case "MaxWeight":
-//         if (value) updatedParams.weightRange += value + ",";
-//         break;
-//       case "Length":
-//       case "Width":
-//       case "Height":
-//         if (value) updatedParams.dimensions += value + ",";
-//         break;
-//       case "MinReview":
-//       case "MaxReview":
-//         if (value) updatedParams.numberOfReviews += value + ",";
-//         break;
-//       default:
-//         break;
-//     }
-//   });
+  const login = async (email, password, router) => {
+    try {
+      const data = {
+        email: email,
+        password: password,
+      };
 
-//   for (const key in updatedParams) {
-//     updatedParams[key] = updatedParams[key].replace(/,$/, "");
-//   }
+      loading.value = true;
+      const response = await axiosInstance.post("/user/login", data);
 
-//   // Construct the final updated params string
-//   let updatedParamsString = "";
-//   for (const key in updatedParams) {
-//     if (updatedParams[key]) {
-//       updatedParamsString += `${key}=${updatedParams[key]}&`;
-//     }
-//   }
-
-//   // Remove trailing '&' if present
-//   updatedParamsString = updatedParamsString.replace(/&$/, "");
-
-//   console.log("Updated String: ", updatedParamsString);
-//   return updatedParamsString;
-// };
-
-export const useAuthStore = defineStore({
-  id: "auth",
-  state: () => ({
-    accessToken: localStorage.getItem("accessToken"),
-    allProducts: [],
-    user: {},
-    loading: false,
-  }),
-  getters: {
-    getAccessToken() {
-      return this.accessToken;
-    },
-  },
-  actions: {
-    async login(email, password, router) {
-      try {
-        const data = {
-          email: email,
-          password: password,
-        };
-
-        this.loading = true;
-        const response = await axiosInstance.post("/user/login", data);
-
-        if (isResponseSuccessful(response)) {
-          this.accessToken = response.data.token;
-          localStorage.setItem("accessToken", this.accessToken);
-          router.push({ name: "Products" });
-          toast.success("Login Successfully!");
-        } else {
-          toast.error("Invalid Credentials");
-        }
-        this.loading = false;
-      } catch (error) {
-        this.loading = false;
-
-        console.log(error);
+      if (isResponseSuccessful(response)) {
+        accessToken.value = response.data.token;
+        localStorage.setItem("accessToken", accessToken.value);
+        router.push({ name: "Products" });
+        toast.success("Login Successfully!");
+      } else {
+        toast.error("Invalid Credentials");
       }
-    },
+      loading.value = false;
+    } catch (error) {
+      loading.value = false;
 
-    async fetchProducts(queryParams) {
-      try {
-        this.loading = true;
-        const response = await axiosInstance.get(`/products?${queryParams}`);
-        if (isResponseSuccessful(response)) {
-          this.allProducts = response.data.allProducts;
-        } else {
-          toast.error("Can't fetch products");
-        }
-        this.loading = false;
-      } catch (error) {
-        console.log("Error during fecting products: ", error);
-        this.loading = false;
+      console.log(error);
+    }
+  };
+
+  const fetchProducts = async (queryParams) => {
+    try {
+      loading.value = true;
+      const response = await axiosInstance.get(`/products?${queryParams}`);
+      if (isResponseSuccessful(response)) {
+        totalPages.value = response.data.totalCount;
+        allProducts.value = response.data.allProducts;
+      } else {
+        toast.error("Can't fetch products");
       }
-    },
-    logout(router) {
-      this.accessToken = null;
-      localStorage.clear();
-      router.push({ name: "Login" });
-    },
-  },
+      loading.value = false;
+    } catch (error) {
+      console.log("Error during fecting products: ", error);
+      loading.value = false;
+    }
+  };
+
+  const logout = (router) => {
+    accessToken.value = null;
+    localStorage.clear();
+    router.push({ name: "Login" });
+  };
+
+  return {
+    accessToken,
+    allProducts,
+    totalPages,
+    user,
+    loading,
+    login,
+    fetchProducts,
+    logout,
+  };
 })(piniaInstance);

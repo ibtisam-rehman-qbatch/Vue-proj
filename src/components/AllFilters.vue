@@ -16,11 +16,14 @@
                 <div v-for="(value, index) in filters" :key="index">
                   <div class="inline-flex items-center text-[#5A5F7D] py-1 text-sm">
                     <input
+                    :value="value"
+                    v-model="selectCategory"
                     class="appearance-none checked:bg-[#27C498] border-[1px] border-[#C6D0DC] checked:border-transparent h-4 w-4 rounded-full mx-2"
                     type="radio"
-                    :checked="false"
+                    name="category"
                    
                     /> 
+                    
                     <span>{{value}}</span>
                   </div>
                 </div>
@@ -33,7 +36,7 @@
                     <button class="w-20 h-9 text-[#9299B8] mx-2 border rounded-md"  @click.prevent="cancel"  @click="hideFilters">
                         Cancel
                     </button>
-                    <button type="submit" class="w-20 h-9 text-white m-2 mr-3 bg-[#27C498] border rounded-md text-sm"  @click="hideFilters">
+                    <button type="submit" class="w-20 h-9 text-white m-2 mr-3 bg-[#27C498] border rounded-md text-sm"  @click="handleSubmit">
                         Apply
                     </button>
                 </div>
@@ -50,10 +53,15 @@
 
 <script setup>
  import close from "../assets/svgs/close.svg"
-
+  import { ref } from "vue";
  const props = defineProps({
   hideFilters: Function,
  })
+const handleSubmit = ()=>{
+  console.log("category: ",selectCategory.value)
+  props.hideFilters();
+}
+ const selectCategory = ref("All");
 
 const filters = [
   'All Departments',
