@@ -6,6 +6,7 @@
       import { useAuthStore } from '../store';
       import { useRoute, useRouter } from 'vue-router';
       import Pagination from '../components/Pagination.vue';
+      import NotFound from '../components/NotFound.vue';
 
 
       const showMoreFilters = ref(false);
@@ -15,21 +16,24 @@
       const route = useRoute();
       const router = useRouter()
 
-      const queryParams = route.query;
+      let queryParams = route.query;
       const currentPage = ref(parseInt(queryParams["pageNo"]) || 1);
-      const queryString = new URLSearchParams(queryParams).toString();
+      let queryString = new URLSearchParams(queryParams).toString();
 
      
-      watchEffect( async ()=>{
-       
+      watch(route,  async (updatedRoute, prevRoute)=>{
+      queryParams = updatedRoute.query;
+      if (Number(queryParams.pageNo) < 0 || Number(queryParams.pageNo) > useAuthStore.totalPages ) {currentPage.value= -1;return;}
+      currentPage.value = Number(queryParams.pageNo) || 1;
+      queryString = new URLSearchParams(queryParams).toString();
       await useAuthStore.fetchProducts(queryString);
       // allProducts.value = useAuthStore.allProducts;
       })
 
-      watch(route, (newVal, oldVal)=>{
-          currentPage.value = Number(newVal.query.pageNo) || 1
+      onMounted(async()=>{
+        await useAuthStore.fetchProducts(queryString);
       })
-     
+
 
       const displayFilters = ()=>{
         showMoreFilters.value=true
@@ -48,24 +52,11 @@
       currentPage.value = page;
     }
 
-    // const handlePageChange = (page)=>{
-    //   router.push({ query: { ...route.query, pageNo: page } , name: "Products" });
-
-    //   const query = new URLSearchParams({ ...route.query, pageNo: page }).toString();
-    //   useAuthStore.fetchProducts(query)
-    //   currentPage.value = page;
-    //   console.log("curr page: ", currentPage.value)
-    // }
-
-
-
-
-
   </script>
 
 <template>
                     
-  <div class="mx-8">
+  <div class="mx-8" v-if="currentPage>0 && currentPage<=useAuthStore.totalPages">
 
     
     <FilterSection :displayFilters="displayFilters" :showExport="showExport"/>
@@ -85,6 +76,9 @@
 
     <Pagination :currentPage="currentPage" :totalPages="useAuthStore.totalPages" :updatePageNum="updatePageNum" />
 
+  </div>
+  <div v-else>
+    <NotFound/>
   </div>
     
 </template>

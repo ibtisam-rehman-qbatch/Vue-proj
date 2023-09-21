@@ -47,9 +47,9 @@
         if(bulletsThreshold.value) query.bulletsThreshold = `${bulletsThreshold.value}`
         if(hasVariations.value) query.hasVariations = `${hasVariations.value}`
 
-        router.push({ query: { ...query } , name: "Products" });
-        const queryString = new URLSearchParams({ ...query }).toString();
-        useAuthStore.fetchProducts(queryString)
+        queryParams.search ? router.push({ query: { ...query , search:queryParams.search } , name: "Products" }) : router.push({ query: { ...query } , name: "Products" });
+        // const queryString = new URLSearchParams({ ...query }).toString();
+        // useAuthStore.fetchProducts(queryString)
         props.hideFilters()
        
     }

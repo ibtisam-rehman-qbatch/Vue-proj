@@ -47,7 +47,7 @@
     ],
     datasets: [
       {
-        label: "Dashed",
+        label: "Original Price",
         fill: true,
         backgroundColor: (ctx) => {
           const canvas = ctx.chart.ctx;
@@ -65,7 +65,7 @@
         pointStyle: false,
       },
       {
-        label: "Dashed",
+        label: "Expected Price",
         fill: true,
         backgroundColor: (ctx) => {
           const canvas = ctx.chart.ctx;

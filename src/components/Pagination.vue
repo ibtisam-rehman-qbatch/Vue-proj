@@ -124,8 +124,8 @@ const handlePageNoClick=(page)=>{
     if(page!=props.currentPage){
         router.push({ query: { ...route.query, pageNo: page } , name: "Products" });
 
-        const query = new URLSearchParams({ ...route.query, pageNo: page }).toString();
-        useAuthStore.fetchProducts(query)
+        // const query = new URLSearchParams({ ...route.query, pageNo: page }).toString();
+        // useAuthStore.fetchProducts(query)
         window.scrollTo({
         top: 0});
 

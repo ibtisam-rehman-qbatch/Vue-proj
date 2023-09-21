@@ -1,3 +1,21 @@
+        
+        <script setup>
+            import DetailsChart from "./DetailsChart.vue"
+            import { computed } from "vue";
+        
+            const props = defineProps({
+                data: Object,
+            });
+            const variationAsins = computed(()=>{
+                const asins = props.data.variations.map((variation)=>variation.asin);
+                return asins;
+            })
+            const variationAttr = computed(()=>{
+                const attributes = props.data.variation_attributes.map((attr)=> attr.attributes);
+                return attributes;
+            })
+        </script>
+
 <template>
     <div class="w-[45.125rem] h-[49.9rem] bg-white">
         <div class="p-4">
@@ -46,29 +64,27 @@
                 <p class="text-[#979797] font-semibold text-xs py-2">
                     Variations:
                 </p>
-                <p class="text-[#031625] text-sm border-b pb-3">
-                    B0BSXS7NDG, C0VSXS7NDG, L0ACVK7NDG, P0BSXS7NDG, G1VSXS7NDG, J0BSXS7NDG
-                </p>
+                <div class="text-[#031625] text-sm border-b pb-3 overflow-x-auto truncate" :title="variationAsins">
+                    <span v-for="asin in variationAsins" :key="asin">
+                       {{ asin }} ,
+                    </span>
+                    
+                </div>
             </div>
             <div class="mt-2">
                 <p class="text-[#979797] font-semibold text-xs py-2">
                     Attributes Variations
                 </p>
-                <div class="text-sm border-b pb-3 ">
-                    <div class="inline-flex items-center">
-                        <div>
-                        <span class="text-[#5A5F7D]">Color:</span> <span class="text-[#031625]">Red</span>,
-                        <span class="text-[#5A5F7D]">Size:</span> <span class="text-[#031625]">Small</span>
-                    </div>
-                    <div class="mx-3 px-3 border-x">
-                        <span class="text-[#5A5F7D]">Color:</span> <span class="text-[#031625]">Black</span>,
-                        <span class="text-[#5A5F7D]">Size:</span> <span class="text-[#031625]">Medium</span>
-                    </div>
-                    <div>
-                        <span class="text-[#5A5F7D]">Color:</span> <span class="text-[#031625]">Grey</span>,
-                        <span class="text-[#5A5F7D]">Size:</span> <span class="text-[#031625]">Large</span>
-                    </div>
-                    </div>
+                <div class="text-sm border-b pb-3 overflow-x-auto" >
+                    <p class="inline-flex items-center truncate " >
+                       
+                        <span v-for="attributes in variationAttr" :key="attributes">
+                            <span v-for="attribute in attributes" :key="attribute">
+                                <span class="text-[#5A5F7D]">{{attribute?.dimension}}:</span> <span class="text-[#031625]">{{attribute?.value}}</span>,
+                            </span>
+                            <span class="text-[#C4C4C4] mx-3">  | </span>
+                        </span>
+                    </p>
                     
                 </div>
             </div>
@@ -82,13 +98,13 @@
                     <div class="text-sm ">
                         <div class="inline-flex items-center">
                             <div>
-                                <span class="text-[#5A5F7D]">Length:</span> <span class="text-[#031625]">23 in</span>   
+                                <span class="text-[#5A5F7D]">Length:</span> <span class="text-[#031625]">{{data?.dimensions?.itemLength}} in</span>   
                             </div>
                             <div class="mx-3 px-3 border-x">
-                                <span class="text-[#5A5F7D]">Width:</span> <span class="text-[#031625]">23 in</span>
+                                <span class="text-[#5A5F7D]">Width:</span> <span class="text-[#031625]">{{data?.dimensions?.itemWidth}} in</span>
                             </div>
                             <div>
-                                <span class="text-[#5A5F7D]">Height:</span> <span class="text-[#031625]">23 in</span>
+                                <span class="text-[#5A5F7D]">Height:</span> <span class="text-[#031625]">{{ data?.dimensions?.itemHeight }} in</span>
                             </div>
                         </div>
                     </div>
@@ -99,25 +115,25 @@
                         Weight
                     </p>
                     <div class="text-sm ">
-                        <span class="text-[#031625]">0.60 lbs</span>   
+                        <span class="text-[#031625]">{{data?.dimensions?.itemWeight}} lbs</span>   
                     </div>
                 </div>
                 <div>
                     <p class="text-[#979797] font-semibold text-xs py-2">
                         Opportunity Score
                     </p>
-                    <div class="text-xs bg-[#0FB6001A] rounded-md p-1 flex justify-center font-semibold">
-                        <span class="text-[#0FB600]">4 High demand</span>   
+                    <div v-if="data.opportunity_score" class="text-xs bg-[#0FB6001A] rounded-md p-1 flex justify-center font-semibold">
+                        <span  class="text-[#0FB600]" >{{ data?.opportunity_score }} High demand</span>  
+                        
                     </div>
+                    <div v-else class="text-xs bg-[#b600001a] rounded-md p-1 flex justify-center font-semibold">
+                    <span  class="text-[#b63700c4]">No Score</span>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
-
-<script setup>
-    import DetailsChart from "./DetailsChart.vue"
-</script>
 
 <style>
 

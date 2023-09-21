@@ -7,6 +7,7 @@ import RatingComponent from "./RatingComponent.vue"
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import detailProdPic from "../assets/images/prodDetailPic.png"
+import { useAuthStore } from "../store";
 
 const router = useRouter()
 const showExport = ref(0);
@@ -19,16 +20,17 @@ const props = defineProps({
         },
   });
 
+
 const handleExportClick = (e)=>{
 
     if(e.target.checked) showExport.value++;
     else showExport.value--;
       
     emit('export-button', showExport.value)
-}
+}   
 
 const showDetailPage = ()=>{
-    router.push({ name: 'Product-details', params: { id: props.data.id } })
+    router.push({ name: 'Product-details', params: { id: props.data.id }, query: {userId: useAuthStore?.user?.id} })
 }
 
 const emit = defineEmits(['export-button']);
@@ -58,7 +60,7 @@ const emit = defineEmits(['export-button']);
            
         <div class="flex flex-col space-y-2">
           <p id="cardIntro" :title="props.data.title" :class="{
-            ' font-poppins line-clamp-2 overflow-hidden text-overflow-ellipsis:':true,
+            ' font-poppins line-clamp-2 overflow-hidden text-overflow-ellipsis':true,
             'w-[13.75rem] h-[2.5rem] text-sm': !isDetail,
             'w-[18.625rem] text-md': isDetail
             }">
@@ -81,7 +83,7 @@ const emit = defineEmits(['export-button']);
                 </p>
                 <button class="inline-flex items-center">
                     
-                    <RatingComponent :filledStars="props.data.reviews"/>
+                    <RatingComponent :filledStars="props.data.reviews || 0"/>
                     <img :src="chevronDown" class="px-3"/>
                     <p class="text-[#27C498]">{{ props.data.reviews_count }}</p>
                 </button>
@@ -94,14 +96,14 @@ const emit = defineEmits(['export-button']);
                 </p>
                 
                 <p class="inline-flex items-center">
-                    <span class="bg-[#0FB600] text-white">
+                    <span class="bg-[#0FB600] text-white px-[0.2rem]">
                         #{{ props.data.category_bsr }}
                     </span>
                     <span class="px-1 truncate">
                        in {{props.data.main_category_name}}
-                       <span class=" text-[#27C498]" v-if="props.data.category_bsr <=100">
+                       <span class=" text-[#27C498]" v-if="props.data.category_bsr <=100" title="This product ranks in Top 100">
                         (Top 100)
-                    </span>
+                        </span>
                     </span>
                     
                     

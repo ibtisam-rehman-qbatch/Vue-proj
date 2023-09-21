@@ -2,9 +2,9 @@
     <div class="m-6">
         <DetailsHeader/>
       <div class="flex flex-row justify-between">
-            <ProductCard :data="product" :isDetail="true"/>
+            <ProductCard :data="useAuthStore.productDetails" :isDetail="true"  />
 
-            <AdditionalDetails/>
+            <AdditionalDetails :data="useAuthStore.productDetails" v-if="Object.keys(useAuthStore.productDetails).length!==0"/>
             
       </div>
     </div>
@@ -14,21 +14,30 @@
 import ProductCard from '../components/ProductCard.vue';
 import DetailsHeader from '../components/DetailsHeader.vue';
 import AdditionalDetails from '../components/AdditionalDetails.vue';
-const product = {
-            "id": "82114",
-            "title": "MIULEE Pack of 4 Decorative Outdoor Pillow Covers Square Cushion Cases PU Coating Waterproof Throw Pillowcase Shell for Living Room Couch Sofa Garden Tent Park 16x16 Inch Light Green",
-            "price": 17.99,
-            "asin": "B086KZX338",
-            "reviews": null,
-            "reviews_count": null,
-            "bsr": "2972638011",
-            "category_bsr": "3",
-            "main_category_id": 1055,
-            "main_category_name": "in Men's T-Shirts",
-            "category_id": null,
-            "brand_id": "1478"
-        }
+import { onMounted } from 'vue';
+import { useAuthStore } from '../store';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const queryParams = route.query;
+
+const props = defineProps({
+  id: String,
+  data: Object,
+})
+  const productCardItems = [ "id","title","price","asin","reviews","reviews_count","bsr","category_bsr","main_category_id","main_category_name","category_id","brand_id"]
+  const productCardData = {}
+  
+  onMounted(async ()=>{
+    await useAuthStore.fetchProductDetails(props.id, queryParams.userId)
+
+  //   productCardItems.forEach((itemName)=>{
+  //   if(useAuthStore.productDetails.hasOwnProperty(itemName)){
+  //     productCardData[itemName] = useAuthStore.productDetails[itemName];
+  //    }
+  //  })
+    
+  })
 </script>
 
 <style>

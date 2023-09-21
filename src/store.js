@@ -13,7 +13,8 @@ export const useAuthStore = defineStore("Products", () => {
   const accessToken = ref(localStorage.getItem("accessToken"));
   const allProducts = ref([]);
   const totalPages = ref(0);
-  const user = ref({});
+  const productDetails = ref({});
+  const user = ref(JSON.parse(localStorage.getItem("user")));
   const loading = ref(false);
 
   const getAccessToken = () => {
@@ -32,7 +33,9 @@ export const useAuthStore = defineStore("Products", () => {
 
       if (isResponseSuccessful(response)) {
         accessToken.value = response.data.token;
+        user.value = response.data.user;
         localStorage.setItem("accessToken", accessToken.value);
+        localStorage.setItem("user", JSON.stringify(user.value));
         router.push({ name: "Products" });
         toast.success("Login Successfully!");
       } else {
@@ -63,6 +66,24 @@ export const useAuthStore = defineStore("Products", () => {
     }
   };
 
+  const fetchProductDetails = async (productId, userId) => {
+    try {
+      loading.value = true;
+      const response = await axiosInstance.get(
+        `/products/details/${productId}?userId=${userId}`
+      );
+      if (isResponseSuccessful(response)) {
+        productDetails.value = response.data.productDetails;
+      } else {
+        toast.error("Can't fetch product Details");
+      }
+      loading.value = false;
+    } catch (error) {
+      console.log("Error during fecting product Details: ", error);
+      loading.value = false;
+    }
+  };
+
   const logout = (router) => {
     accessToken.value = null;
     localStorage.clear();
@@ -72,11 +93,13 @@ export const useAuthStore = defineStore("Products", () => {
   return {
     accessToken,
     allProducts,
+    productDetails,
     totalPages,
     user,
     loading,
     login,
     fetchProducts,
     logout,
+    fetchProductDetails,
   };
 })(piniaInstance);

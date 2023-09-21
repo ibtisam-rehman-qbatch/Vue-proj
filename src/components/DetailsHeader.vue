@@ -7,10 +7,14 @@
     import arrowBack from "../assets/svgs/arrow-back.svg"
     import Button from "../assets/svgs/Button.vue"
 
+    import { useRouter } from "vue-router"
+
     const props = defineProps({
         displayFilters: Function,
         showExport: Number,
     });
+
+    const router = useRouter();
 
     
 </script>
@@ -19,7 +23,9 @@
 <template>
     <div class="flex items-center justify-between my-6  " >
         <div class="inline-flex items-center space-x-2">
-            <img :src="arrowBack" alt="" >
+            <button @click="router.go(-1)" title="Go Back">
+                <img :src="arrowBack" alt="" >
+            </button>
             <span class="font-bold text-2xl text-[#272B41]  ">
                 Product Details
             </span>

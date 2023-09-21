@@ -5,7 +5,7 @@ import chevronDown from "../assets/svgs/chevron-down.svg"
 import searchSm from "../assets/svgs/search-sm.svg"
 import bell from "../assets/svgs/bell-01.svg"
 import AllFilters from "./AllFilters.vue"
-import { ref } from "vue"
+import { ref, watch, watchEffect } from "vue"
 import { vOnClickOutside } from '@vueuse/components'
 import { debounce } from "lodash";
 import { useRoute, useRouter } from "vue-router"
@@ -20,17 +20,22 @@ const hideFilters = ()=>{
   showModal.value=false;
 }
 
+watch(route, (newVal, oldVal)=>{
+  searchTerm.value=newVal.query.search;
+})
+
+
 
 const handleSearch = ()=>{
   const value = searchTerm.value;
   if(value){
     router.push({ query: { search: value } , name: "Products" });
-    const query = new URLSearchParams({ search: value  }).toString();
-    useAuthStore.fetchProducts(query)
+    // const query = new URLSearchParams({ search: value  }).toString();
+    // useAuthStore.fetchProducts(query)
 
   }else{
     router.push({name: "Products"})
-    useAuthStore.fetchProducts();
+    // useAuthStore.fetchProducts();
   }
 
 }
